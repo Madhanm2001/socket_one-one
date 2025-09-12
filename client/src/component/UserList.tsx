@@ -91,7 +91,7 @@ const UserList = () => {
               id='user'
               key={id}
               onClick={() => setSelectedUser(user.user)}
-              style={{ background: selectedUser?._id === user.user._id ? '#333' : 'transparent', cursor: 'pointer' }}
+              style={{ background: selectedUser?._id === user.user._id ? '#333' : 'transparent', cursor: 'pointer',borderRadius:'10px' }}
             >
               <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
                 <img src={profile} style={{ height: '50px', width: '50px', borderRadius: '100%' }} alt="profile img" />
