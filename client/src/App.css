@@ -1,0 +1,167 @@
+@import "tailwindcss";
+body{
+  background-color: #161616;
+  width: 100%;
+}
+#chatSpace {
+  background: url('./assets/images/IMG_8071.JPG');
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 0;
+}
+
+#chatSpace::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  backdrop-filter: blur(.7px);
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 0;
+}
+
+#chatContain {
+  overflow-y: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;   
+  padding: 3%;
+  z-index: 1;
+  position: relative;
+}
+
+#InputWrapTop {
+  z-index: 1;
+  position: relative;
+  padding: 10px 2.5%;
+}
+
+#Time{
+  font-size: small;
+}
+#doubleTick{
+  height: 15px;
+  width: 15px;
+  margin-top:2%;
+}
+.inputBox{
+  background-color: #161616;
+  border: none;
+  padding: 20px;
+  height: 50px;
+  width: 72%;
+  color: white;
+  text-decoration: none;
+  outline: none;
+}
+#inputBoxWrap{
+  position: fixed;
+  bottom: 10px;
+  width: 95%;
+  padding: 0 10px;
+}
+
+/* #inputBox{
+  position: fixed;
+  bottom: 10px;
+  width: 97%;
+  padding: 0 7px;
+  left: 1%;
+} */
+#sendButton{
+  height: 42px;
+  width: 42px;
+  background-color: rgb(0, 116, 71);
+  padding: 10px;
+  border-radius: 100%;
+  cursor: pointer;
+}
+/* @media (min-width:768px){
+  .inputBox{
+
+    width:54%;
+}
+}
+@media (min-width:992px){
+  .inputBox{
+
+    width:64%;
+}
+}
+@media (min-width:1100px){
+  .inputBox{
+
+    width:72%;
+}
+} */
+
+#listNavBar{
+  display: flex;
+  justify-content: space-between;
+  color: antiquewhite;
+  padding: 11.5px 20px;
+  border-bottom: 1px solid grey;
+  position: sticky;
+  top: 0;
+  background-color: #161616;
+  z-index: 200;
+}
+#listNavBar h4{
+  margin-top: 5px;
+}
+.dot{
+  margin: 0;
+  padding: 0;
+  line-height: .25;
+}
+#threeDot{
+  display: flex;
+  flex-direction: column;
+}
+#user{
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  padding:0 10px;
+  cursor: pointer;
+}
+#user h5 {
+  margin: 0;
+  padding: 0;
+}
+#userList{
+  background-color: #161616;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  z-index: 0;
+}
+
+#userList::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  backdrop-filter: blur(.7px);
+  background-color: #161616;
+  z-index: 0;
+}
+#userListContain{
+  overflow-y: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;   
+  padding: 3%;
+  z-index: 1;
+}
+#user:hover{
+  background-color: rgb(48, 48, 48);
+  border-radius: 10px;
+
+}
