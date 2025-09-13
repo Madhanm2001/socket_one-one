@@ -70,7 +70,8 @@ interface Message {
   msg?: string;
   fromId?: any;
   toId?:string;
-  chat?:string
+  chat?:string;
+  _id?:string
 }
 
 interface ChatContextType {
@@ -80,6 +81,7 @@ interface ChatContextType {
   messages: Message[];
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
   sendMessage: (text: string) => void;
+  deleteMessage: (id: string) => void;
 }
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
@@ -95,16 +97,22 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
       auth: { token: localStorage.getItem("token") },
     });
     setSocket(newSocket);
+    const loginUser:any=localStorage.getItem('LoginId') ||''
+    setLoginUser(loginUser)
 
     newSocket.on("receive_message", (data: Message) => {
       console.log(data,"rece");
-      
       if (data.fromId == selectedUser?._id) {
         console.log('loghhh',data);
-        const loginUser:any=localStorage.getItem('LoginId') ||''
+        setMessages((prev) => [...prev, { fromId:data.fromId,todId:data.toId,msg:data.chat,_id:data._id}]);
+      }
+    });
 
-        setLoginUser(loginUser)
-        setMessages((prev) => [...prev, { fromId:data.fromId,todId:data.toId,msg:data.chat}]);
+    newSocket.on("message_deleted", (data: Message) => {
+      console.log(data,"rece");
+      if (data.fromId == selectedUser?._id) {
+        console.log('loghhh',data);
+        setMessages((prev) => prev.filter((msg) => msg._id !== data._id));
       }
     });
 
@@ -125,6 +133,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
           msg: m?.chat || '',
           fromId: m.fromId,
           toId: m.toId,
+          _id:m._id
         }));
         setMessages(history);
       } catch (err) {
@@ -156,13 +165,34 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
     ]);
   }
 };
+
+  const deleteMessage = (id: string) => {
+  if (socket) {
+    socket.emit(
+      "delete_private_message",
+      id,
+      selectedUser._id,
+      (response: any) => {
+        if (response?.error) {
+          console.error("Message error:", response.error);
+        } else {
+          console.log("Message deleted:", response.message);
+        }
+      }
+    );
+
+    setMessages((prev) => prev.filter((msg) => msg._id !== id));
+
+    
+  }
+};
 console.log(loginUser,'loginUser');
 
 
 
 
   return (
-    <ChatContext.Provider value={{ socket, selectedUser, setSelectedUser, messages, setMessages, sendMessage }}>
+    <ChatContext.Provider value={{ socket, selectedUser, setSelectedUser, messages, setMessages, sendMessage, deleteMessage}}>
       {children}
     </ChatContext.Provider>
   );

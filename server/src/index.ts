@@ -118,7 +118,7 @@ socketOneToOne.on("connection", (socket) => {
     if (receiverSocketId) {
       socketOneToOne
         .to(receiverSocketId)
-        .emit("message_deleted", { chatId });
+        .emit("message_deleted", { _id:chatId, fromId });
       console.log(
         `🗑️ Delete request from ${fromId} -> ${toId}, chatId: ${chatId}`
       );

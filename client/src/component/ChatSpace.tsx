@@ -126,9 +126,11 @@ import profile from '../assets/images/IMG_7885.JPG';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import send from '../assets/images/send.png';
 import { useChat } from '../context/ChatContext';
+import { FaAngleDown } from "react-icons/fa";
+
 
 function ChatSpace() {
-  const { selectedUser, messages, sendMessage } = useChat();
+  const { selectedUser, messages, sendMessage,deleteMessage } = useChat();
   const [message, setMessage] = useState('');
   const chatRef = useRef<HTMLDivElement | null>(null);
 
@@ -156,6 +158,10 @@ function ChatSpace() {
     }
   };
 
+  const deleteHandle = (id:any) => {
+      console.log("sendmsg",message);
+      deleteMessage(id);
+  };
   return (
     <div style={{ width: '80%', borderLeft: '1px grey solid', zIndex: 10 }}>
       <div id='navBar' style={{ width: '100%' }}>
@@ -188,13 +194,14 @@ function ChatSpace() {
               ))} */}          
               {messages
                 // .filter(m => m.userId === selectedUser._id) 
-                .map((data, i) => (
+                .map((data:any, i:any) => (
                   <div key={i} style={{ margin: '15px', display: 'flex', flexWrap: 'wrap', justifyContent: (localStorage.getItem('LoginId')==data.fromId? 'flex-end' : 'flex-start') }}>
                     <div style={{ color: 'white', backgroundColor: (localStorage.getItem('LoginId')==data.fromId? 'rgb(0, 116, 71)' : '#161616'), padding: '5px 10px', borderRadius: '10px', maxWidth: '80%', wordWrap: 'break-word', fontSize: '15px', gap: '5px' }}>
                       <div style={{ wordWrap: 'break-word', paddingRight: '70px' }}>{data.msg}</div>
                       <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '5px' }}>
                         <div id='Time'>10:30 AM</div>
                         <img src={doubleTick} id='doubleTick' alt="" />
+                        {localStorage.getItem('LoginId')==data.fromId&&<FaAngleDown onClick={()=>deleteHandle(data._id)}/>}
                       </div>
                     </div>
                   </div>
