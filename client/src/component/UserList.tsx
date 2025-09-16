@@ -14,7 +14,7 @@
 //     },[])
 
 //     const[userList,setUserList]=useState([])
-//     const usersArr=[{userId:23,name:'maddy',recentMessage:'super bro',time:'08.08 PM'},{userId:23,name:'maddy',recentMessage:'super bro',time:'08.08 PM'},{userId:23,name:'maddy',recentMessage:'super bro',time:'08.08 PM'},{userId:23,name:'maddy',recentMessage:'super bro',time:'08.08 PM'},{userId:23,name:'maddy',recentMessage:'super bro',time:'08.08 PM'},{userId:23,name:'maddy',recentMessage:'super bro',time:'08.08 PM'},{userId:23,name:'maddy',recentMessage:'super bro',time:'08.08 PM'},{userId:23,name:'maddy',recentMessage:'super bro',time:'08.08 PM'},{userId:23,name:'maddy',recentMessage:'super bro',time:'08.08 PM'}]
+//     const usersArr=[{userId:23,name:'maddy',recentMessage:'super bro',time:'08.08 PM'},{userId:23,name:'maddy',recentMessage:'super bro',time:'08.08 PM'}]
 //   return (
 //     <div style={{width:'30%',minWidth:'250px'}}>
 //         <section id='listNavBar'>
@@ -56,15 +56,20 @@
 // export default UserList
 
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import profile from '../assets/images/IMG_7885.JPG';
 import axiosInstance from '../settings/axiosInstance';
 import { URL } from '../settings/apiUrl';
 import { useChat } from '../context/ChatContext';
+import { IoIosLogOut } from "react-icons/io";
+import { useNavigate } from 'react-router-dom';
 
 const UserList = () => {
   const [userList, setUserList] = useState<any[]>([]);
+  const [logOutModel, setLogOutModel] = useState<boolean>();
   const { setSelectedUser, selectedUser } = useChat();
+  const logoutRef = useRef<HTMLDivElement>(null);
+  const navigate=useNavigate()
 
   useEffect(() => {
     axiosInstance.get(URL.user.getUserList).then((res: any) => {
@@ -72,16 +77,38 @@ const UserList = () => {
       setUserList(res.data.userList || []);
       localStorage.setItem('LoginId',res.data.loginUserId)
     });
+    const handleClickOutside = (event: MouseEvent) => {
+    if (logoutRef.current && !logoutRef.current.contains(event.target as Node)) {
+      setLogOutModel(false); 
+    }
+  };
+
+  document.addEventListener("mousedown", handleClickOutside);
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside);
+  };
   }, []);
 
   return (
     <div style={{ width: '30%', minWidth: '250px' }}>
       <section id='listNavBar'>
         <h4>WhatsApp</h4>
-        <div id='threeDot'>
+        <div id='threeDot' ref={logoutRef}  style={{position:'relative'}} onClick={()=>setLogOutModel(prev=>!prev)}>
           <h3 className='dot'>.</h3>
           <h3 className='dot'>.</h3>
           <h3 className='dot'>.</h3>
+
+          {logOutModel && (
+  <ul className="deleteModel" onClick={() => {localStorage.removeItem('token'),navigate('/Auth')}}>
+    <span>
+      <IoIosLogOut
+        style={{ marginTop: "3px",height:'20px', cursor: "pointer" }}
+      />
+    </span>
+    <li style={{fontWeight:700}}>Logout</li>
+    
+  </ul>
+)}
         </div>
       </section>
       <section id='userList'>

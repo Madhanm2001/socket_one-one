@@ -98,6 +98,26 @@ body{
     width:72%;
 }
 } */
+.deleteModel:hover{
+  color: rgb(194, 42, 42);
+}
+
+.deleteModel {
+  position: absolute;
+  top: 20px;
+  right: 0;
+  width: 120px;
+  padding: 8px 10px;
+  text-align: left;
+  border-radius: 10px;
+  background-color: #111111;
+  color: rgb(173, 173, 173);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  z-index: 1000;
+}
 
 #listNavBar{
   display: flex;
@@ -121,6 +141,7 @@ body{
 #threeDot{
   display: flex;
   flex-direction: column;
+  cursor: pointer;
 }
 #user{
   color: white;
@@ -141,6 +162,20 @@ body{
   flex-direction: column;
   z-index: 0;
 }
+#dowArr {
+  display: none;
+  cursor: pointer;
+  height: 20px;
+  color: #797979ff;
+}
+#delLogo:hover{
+  background-color: rgb(121, 0, 0);
+
+}
+
+.msgContainer:hover #dowArr {
+  display: block;
+}
 
 #userList::before {
   content: '';
@@ -158,7 +193,7 @@ body{
   -ms-overflow-style: none;
   scrollbar-width: none;   
   padding: 3%;
-  z-index: 1;
+  z-index: 100;
 }
 #user:hover{
   background-color: rgb(48, 48, 48);

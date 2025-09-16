@@ -20,7 +20,7 @@
 
 //     const SET=map.set('hsjhdjsd',"sashhjas")
 //     console.log(SET);
-    
+
 
 
 //     const handleReceiveMessage = (data: string) => {
@@ -83,7 +83,7 @@
 //           ))}
 
 // </div>
-          
+
 
 
 // <div id='InputWrapTop'>
@@ -105,7 +105,7 @@
 //             </div>
 //           </div>
 // </div>
-          
+
 
 
 
@@ -127,17 +127,30 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import send from '../assets/images/send.png';
 import { useChat } from '../context/ChatContext';
 import { FaAngleDown } from "react-icons/fa";
-
+import { RiDeleteBinLine } from "react-icons/ri";
 
 function ChatSpace() {
-  const { selectedUser, messages, sendMessage,deleteMessage } = useChat();
+  const { selectedUser, messages, sendMessage, deleteMessage } = useChat();
   const [message, setMessage] = useState('');
+  const [delId, setDelId] = useState('');
+  const [deleteModel, setDeleteModel] = useState(false);
   const chatRef = useRef<HTMLDivElement | null>(null);
+  const delRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (chatRef.current) {
       chatRef.current.scrollTop = chatRef.current.scrollHeight;
     }
+    const handleClickOutside = (event: MouseEvent) => {
+    if (delRef.current && !delRef.current.contains(event.target as Node)) {
+      setDeleteModel(false);
+    }
+  };
+
+  document.addEventListener("mousedown", handleClickOutside);
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside);
+  };
     console.log("mes", messages)
   }, [messages]);
 
@@ -151,16 +164,17 @@ function ChatSpace() {
 
   const handleSend = () => {
     if (message.trim()) {
-      console.log("sendmsg",message);
-      
+      console.log("sendmsg", message);
+
       sendMessage(message);
       setMessage('');
     }
   };
 
-  const deleteHandle = (id:any) => {
-      console.log("sendmsg",message);
-      deleteMessage(id);
+  const deleteHandle = (id: any) => {
+    console.log("sendmsg", message);
+    deleteMessage(id);
+    setDeleteModel(false)
   };
   return (
     <div style={{ width: '80%', borderLeft: '1px grey solid', zIndex: 10 }}>
@@ -174,7 +188,6 @@ function ChatSpace() {
             <p className='m-0' style={{ color: 'grey', fontSize: '13px' }}>Chat with {selectedUser.name}</p>
           </div>
         </div>
-
         <div id='chatSpace'>
           <div id="chatContain" ref={chatRef}>
             {/* {messages
@@ -191,20 +204,39 @@ function ChatSpace() {
                     </div>
                   </div>
                 )
-              ))} */}          
-              {messages
-                // .filter(m => m.userId === selectedUser._id) 
-                .map((data:any, i:any) => (
-                  <div key={i} style={{ margin: '15px', display: 'flex', flexWrap: 'wrap', justifyContent: (localStorage.getItem('LoginId')==data.fromId? 'flex-end' : 'flex-start') }}>
-                    <div style={{ color: 'white', backgroundColor: (localStorage.getItem('LoginId')==data.fromId? 'rgb(0, 116, 71)' : '#161616'), padding: '5px 10px', borderRadius: '10px', maxWidth: '80%', wordWrap: 'break-word', fontSize: '15px', gap: '5px' }}>
-                      <div style={{ wordWrap: 'break-word', paddingRight: '70px' }}>{data.msg}</div>
-                      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '5px' }}>
-                        <div id='Time'>10:30 AM</div>
-                        <img src={doubleTick} id='doubleTick' alt="" />
-                        {localStorage.getItem('LoginId')==data.fromId&&<FaAngleDown onClick={()=>deleteHandle(data._id)}/>}
-                      </div>
+              ))} */}
+            {messages
+              // .filter(m => m.userId === selectedUser._id) 
+              .map((data: any, i: any) => (
+                <div key={i} style={{ margin: '15px', display: 'flex', flexWrap: 'wrap', justifyContent: (localStorage.getItem('LoginId') == data.fromId ? 'flex-end' : 'flex-start') }}>
+                  <div className="msgContainer" style={{ color: 'white', backgroundColor: (localStorage.getItem('LoginId') == data.fromId ? 'rgba(0, 48, 29, 1)' : '#161616'), padding: '5px 10px',marginTop:'10px', borderRadius: '10px', maxWidth: '80%', wordWrap:'break-word', fontSize: '15px', gap: '5px' }}>
+                    <div style={{ display: 'flex', position: 'relative' }} >
+                      <div style={{ wordWrap: 'break-word',display:'flex',flexWrap:'wrap',wordBreak:"break-all", paddingRight: '70px' }}>{data.msg}</div>
+
+                      {localStorage.getItem('LoginId') == data.fromId && (
+                        <div style={{position:'relative'}} ref={delRef}>
+                          <FaAngleDown onClick={() => {setDeleteModel(prev => !prev),setDelId(data._id)}} id='dowArr' />
+
+                          {(deleteModel && (delId===data._id)) && (
+                            <ul className="deleteModel" onClick={() => deleteHandle(data._id)}>
+                              <li>Delete</li>
+                              <span><RiDeleteBinLine style={{ marginTop: '3px', cursor:'pointer'}} /></span>
+                            </ul>
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '5px' }}>
+                      <div id='Time'>10:30 AM</div>
+                      <img src={doubleTick} id='doubleTick' alt="" />
+                      {/* {localStorage.getItem('LoginId')==data.fromId&&<FaAngleDown onClick={()=>deleteHandle(data._id)}/>} */}
+
+
                     </div>
                   </div>
+                </div>
               ))}
           </div>
 
