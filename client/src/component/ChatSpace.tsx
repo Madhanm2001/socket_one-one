@@ -161,7 +161,7 @@ function ChatSpace() {
 
   if (!selectedUser) {
     return (
-      <div style={{ width: window.innerWidth>768?'80%':'100%', borderLeft: '1px grey solid', zIndex: 10, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <div style={{ width: window.innerWidth>992?'80%':'100%', borderLeft: '1px grey solid', zIndex: 10, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <p>Select a user to start chatting</p>
       </div>
     );
@@ -183,11 +183,11 @@ function ChatSpace() {
     setDeleteModel(false)
   };
   return (
-    <div style={{ width:window.innerWidth>768?'80%':'100%', borderLeft: '1px grey solid', zIndex: 10 }}>
+    <div style={{ width:window.innerWidth>992?'80%':'100%', borderLeft: '1px grey solid', zIndex: 10 }}>
       <div id='navBar' style={{ width: '100%' }}>
         <div className="d-flex gap-3 py-2 px-3 sticky-top" style={{ backgroundColor: '#161616' }}>
           <div style={{display:'flex',gap:'10px'}}>
-            {window.innerWidth<=768&&<FaAngleLeft style={{height:'25px',color:'white',marginTop:'12px'}} onClick={()=>{setSelectedUser('')}}/>}
+            {window.innerWidth<=992&&<FaAngleLeft style={{height:'25px',color:'white',marginTop:'12px'}} onClick={()=>{setSelectedUser('')}}/>}
             <img src={profile} style={{ height: '50px', width: '50px', borderRadius: '100%' }} alt="" />
           </div>
           <div style={{ marginTop: '2.5px' }}>
@@ -258,16 +258,16 @@ function ChatSpace() {
 
           <div id='InputWrapTop'>
             <div id='inputBoxWrap'>
-              <div id='inputBox' style={{ position: 'relative'}}>
+              <div id='inputBox' style={{ position: 'relative',left:window.innerWidth>1100?'2%':'0'}}>
                 <input
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="Type message"
-                  style={{width:window.innerWidth>768?'72%':'99%'}}
+                  style={{width:window.innerWidth>992?'65%':'100%'}}
                   className='py-2 rounded-5 inputBox'
                   onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                 />
-                {message && <img src={send} onClick={handleSend} style={{ position: 'absolute',right:window.innerWidth<768?'2%':"28.5%", bottom: '4px' }} alt="" id='sendButton' />}
+                {message && <img src={send} onClick={handleSend} style={{ position: 'absolute',right:window.innerWidth<=992?'1%':"35.5%", bottom: '4px' }} alt="" id='sendButton' />}
               </div>
             </div>
           </div>

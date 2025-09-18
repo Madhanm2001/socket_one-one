@@ -61,7 +61,7 @@ body{
   position: fixed;
   bottom: 10px;
   width: 95%;
-  padding: 0 10px;
+  padding: 0 20px;
 }
 
 /* #inputBox{
@@ -79,10 +79,10 @@ body{
   border-radius: 100%;
   cursor: pointer;
 }
-/* @media (min-width:768px){
-  .inputBox{
+ @media (min-width:1100px){
+  #inputBoxWrap{
 
-    width:54%;
+    width:100%;
 }
 }
 @media (min-width:992px){
@@ -91,12 +91,6 @@ body{
     width:64%;
 }
 }
-@media (min-width:1100px){
-  .inputBox{
-
-    width:72%;
-}
-} */
 .deleteModel:hover{
   color: rgb(194, 42, 42);
 }
