@@ -132,7 +132,7 @@ import { FaAngleLeft } from "react-icons/fa6";
 import { useNavigate } from 'react-router-dom';
 
 function ChatSpace() {
-  const { selectedUser, messages, sendMessage, deleteMessage,setFlag } = useChat();
+  const { selectedUser, messages,setSelectedUser, sendMessage, deleteMessage,setFlag } = useChat();
   const [message, setMessage] = useState('');
   const [delId, setDelId] = useState('');
   const [deleteModel, setDeleteModel] = useState(false);
@@ -187,7 +187,7 @@ function ChatSpace() {
       <div id='navBar' style={{ width: '100%' }}>
         <div className="d-flex gap-3 py-2 px-3 sticky-top" style={{ backgroundColor: '#161616' }}>
           <div style={{display:'flex',gap:'10px'}}>
-            {window.innerWidth<992&&<FaAngleLeft style={{height:'25px',color:'white',marginTop:'12px'}} onClick={()=>{navigate(-1)}}/>}
+            {window.innerWidth<=992&&<FaAngleLeft style={{height:'25px',color:'white',marginTop:'12px'}} onClick={()=>{setSelectedUser('')}}/>}
             <img src={profile} style={{ height: '50px', width: '50px', borderRadius: '100%' }} alt="" />
           </div>
           <div style={{ marginTop: '2.5px' }}>
