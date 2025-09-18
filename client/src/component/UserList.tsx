@@ -93,7 +93,7 @@ const UserList = () => {
   
 
   return (
-    <div style={{ width: window.innerWidth<=992?'100%':'30%', minWidth: '350px' }}>
+    <div style={{ width: window.innerWidth<=768?'100%':'30%', minWidth: '350px' }}>
       <section id='listNavBar'>
         <h4>WhatsApp</h4>
         <div id='threeDot' ref={logoutRef}  style={{position:'relative'}} onClick={()=>setLogOutModel(prev=>!prev)}>

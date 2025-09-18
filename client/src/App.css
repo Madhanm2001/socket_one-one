@@ -37,7 +37,6 @@ body{
 #InputWrapTop {
   z-index: 1;
   position: relative;
-  padding: 10px 2.5%;
 }
 
 #Time{
@@ -60,8 +59,8 @@ body{
 #inputBoxWrap{
   position: fixed;
   bottom: 10px;
-  width: 95%;
-  padding: 0 20px;
+  width: 100%;
+  padding: 0 10px;
 }
 
 /* #inputBox{
@@ -79,18 +78,8 @@ body{
   border-radius: 100%;
   cursor: pointer;
 }
- @media (min-width:1100px){
-  #inputBoxWrap{
 
-    width:100%;
-}
-}
-@media (min-width:992px){
-  .inputBox{
 
-    width:64%;
-}
-}
 .deleteModel:hover{
   color: rgb(194, 42, 42);
 }
