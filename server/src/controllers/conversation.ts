@@ -53,7 +53,7 @@ export const createMessage = async (req: any, res: Response) => {
     } else {
       conversation = await Conversation.findByIdAndUpdate(
         conversation._id,
-        { $push: { conversation: { fromId, toId, chat } } },
+        { $push: { conversation: { fromId, toId, chat, time:Date.now()} } },
         { new: true }
       );
     }

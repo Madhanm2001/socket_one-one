@@ -25,6 +25,10 @@ const conversationSchema = new mongoose.Schema(
           required: true,
           default: "start your chat",
         },
+        time:{
+          type:String,
+          require:true
+        }
       },
     ],
   },

@@ -67,13 +67,13 @@ import { useNavigate } from 'react-router-dom';
 const UserList = () => {
   const [userList, setUserList] = useState<any[]>([]);
   const [logOutModel, setLogOutModel] = useState<boolean>();
-  const { setSelectedUser, selectedUser } = useChat();
+  const { setSelectedUser, selectedUser,flag } = useChat();
   const logoutRef = useRef<HTMLDivElement>(null);
   const navigate=useNavigate()
 
   useEffect(() => {
     axiosInstance.get(URL.user.getUserList).then((res: any) => {
-        console.log("resssss", res.data.userList)
+        console.log("resssss",selectedUser, res.data.userList)
       setUserList(res.data.userList || []);
       localStorage.setItem('LoginId',res.data.loginUserId)
     });
@@ -87,10 +87,13 @@ const UserList = () => {
   return () => {
     document.removeEventListener("mousedown", handleClickOutside);
   };
-  }, []);
+  }, [flag]);
+
+  console.log(userList,"userList");
+  
 
   return (
-    <div style={{ width: '30%', minWidth: '250px' }}>
+    <div style={{ width: window.innerWidth<992?'100%':'30%', minWidth: '350px' }}>
       <section id='listNavBar'>
         <h4>WhatsApp</h4>
         <div id='threeDot' ref={logoutRef}  style={{position:'relative'}} onClick={()=>setLogOutModel(prev=>!prev)}>
@@ -121,13 +124,32 @@ const UserList = () => {
               style={{ background: selectedUser?._id === user.user._id ? '#333' : 'transparent', cursor: 'pointer',borderRadius:'10px' }}
             >
               <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
-                <img src={profile} style={{ height: '50px', width: '50px', borderRadius: '100%' }} alt="profile img" />
-                <div style={{ marginTop: '12px' }}>
-                  <h5>{user.user.name}</h5>
-                  <p>{user.user.recentMessage || ""}</p>
-                </div>
-              </div>
-              <p style={{ marginTop: '12px' }}>{user.user.time || ""}</p>
+                
+  <img 
+    src={profile} 
+    style={{ height: '50px', width: '50px', borderRadius: '100%' }} 
+    alt="profile img" 
+  />
+  <div style={{ marginTop: '12px' }}>
+    <h5 className="truncate">{user.user.name}</h5>
+    <p className="truncate" style={{ color: 'white' }}>
+      {user?.recentMessage?.chat ? (
+    <>
+      {user?.recentMessage?.fromId === localStorage.getItem("LoginId")
+        ? "you"
+        : user?.user?.name}
+      : {user?.recentMessage?.chat}
+    </>
+  ) : (
+    ""
+  )}
+    </p>
+  </div>
+</div>
+             { user?.recentMessage?.time&&<p style={{ marginTop: '12px',color:'white' }}>{new Date(user?.recentMessage?.time).toLocaleTimeString([], { 
+   hour: '2-digit', 
+   minute: '2-digit' 
+})}</p>}
             </div>
           ))}
         </div>

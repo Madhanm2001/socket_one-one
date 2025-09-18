@@ -75,6 +75,7 @@ socketOneToOne.on("connection", (socket) => {
           fromId,
           toId,
           chat,
+          time:Date()
         });
         console.log(`📩 Message from ${fromId} -> ${toId}`);
       } else {
@@ -92,12 +93,12 @@ socketOneToOne.on("connection", (socket) => {
         conversation = await Conversation.create({
           userId1: fromId,
           userId2: toId,
-          conversation: [{ fromId, toId, chat }],
+          conversation: [{ fromId, toId, chat, time:Date()}],
         });
       } else {
         conversation = await Conversation.findByIdAndUpdate(
           conversation._id,
-          { $push: { conversation: { fromId, toId, chat } } },
+          { $push: { conversation: { fromId, toId, chat, time:Date()} } },
           { new: true }
         );
       }

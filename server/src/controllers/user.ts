@@ -89,21 +89,33 @@ export const getUsersListWithRecentMessage = async (req: any, res: Response) => 
           ],
         })
           .sort({ updatedAt: -1 })
-          .slice("conversation", -1);
+          .slice("conversation", -1)
+          .lean();
+
+        const recentMessage = conversation?.conversation?.[0] || null;
 
         return {
           user,
-          recentMessage: conversation?.conversation?.[0] || null,
+          recentMessage,
+          recentTime: recentMessage?.time ? new Date(recentMessage.time) : null,
         };
       })
     );
 
-    return res.json({userList,loginUserId});
+    // 🔹 Sort by recentMessage.time descending (latest → oldest)
+    userList.sort((a, b) => {
+      if (!a.recentTime) return 1;
+      if (!b.recentTime) return -1;
+      return b.recentTime.getTime() - a.recentTime.getTime();
+    });
+
+    return res.json({ userList, loginUserId });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Something went wrong" });
   }
 };
+
 
 
 

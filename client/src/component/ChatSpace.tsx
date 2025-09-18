@@ -128,14 +128,17 @@ import send from '../assets/images/send.png';
 import { useChat } from '../context/ChatContext';
 import { FaAngleDown } from "react-icons/fa";
 import { RiDeleteBinLine } from "react-icons/ri";
+import { FaAngleLeft } from "react-icons/fa6";
+import { useNavigate } from 'react-router-dom';
 
 function ChatSpace() {
-  const { selectedUser, messages, sendMessage, deleteMessage } = useChat();
+  const { selectedUser, messages, sendMessage, deleteMessage,setFlag } = useChat();
   const [message, setMessage] = useState('');
   const [delId, setDelId] = useState('');
   const [deleteModel, setDeleteModel] = useState(false);
   const chatRef = useRef<HTMLDivElement | null>(null);
-  const delRef = useRef<HTMLDivElement | null>(null);
+  const delRef = useRef<HTMLUListElement | null>(null);
+  const navigate=useNavigate()
 
   useEffect(() => {
     if (chatRef.current) {
@@ -151,12 +154,14 @@ function ChatSpace() {
   return () => {
     document.removeEventListener("mousedown", handleClickOutside);
   };
-    console.log("mes", messages)
+    
   }, [messages]);
+
+  console.log("mes", messages)
 
   if (!selectedUser) {
     return (
-      <div style={{ width: '80%', borderLeft: '1px grey solid', zIndex: 10, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <div style={{ width: window.innerWidth>992?'80%':'100%', borderLeft: '1px grey solid', zIndex: 10, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <p>Select a user to start chatting</p>
       </div>
     );
@@ -165,6 +170,7 @@ function ChatSpace() {
   const handleSend = () => {
     if (message.trim()) {
       console.log("sendmsg", message);
+      setFlag(prev=>!prev)
 
       sendMessage(message);
       setMessage('');
@@ -177,10 +183,11 @@ function ChatSpace() {
     setDeleteModel(false)
   };
   return (
-    <div style={{ width: '80%', borderLeft: '1px grey solid', zIndex: 10 }}>
+    <div style={{ width:window.innerWidth>992?'80%':'100%', borderLeft: '1px grey solid', zIndex: 10 }}>
       <div id='navBar' style={{ width: '100%' }}>
         <div className="d-flex gap-3 py-2 px-3 sticky-top" style={{ backgroundColor: '#161616' }}>
-          <div>
+          <div style={{display:'flex',gap:'10px'}}>
+            {window.innerWidth<992&&<FaAngleLeft style={{height:'25px',color:'white',marginTop:'12px'}} onClick={()=>{navigate(-1)}}/>}
             <img src={profile} style={{ height: '50px', width: '50px', borderRadius: '100%' }} alt="" />
           </div>
           <div style={{ marginTop: '2.5px' }}>
@@ -213,23 +220,32 @@ function ChatSpace() {
                     <div style={{ display: 'flex', position: 'relative' }} >
                       <div style={{ wordWrap: 'break-word',display:'flex',flexWrap:'wrap',wordBreak:"break-all", paddingRight: '70px' }}>{data.msg}</div>
 
-                      {localStorage.getItem('LoginId') == data.fromId && (
-                        <div style={{position:'relative'}} ref={delRef}>
-                          <FaAngleDown onClick={() => {setDeleteModel(prev => !prev),setDelId(data._id)}} id='dowArr' />
+                      {localStorage.getItem('LoginId') === data.fromId && (
+  <div style={{ position: 'relative' }}>
+    <FaAngleDown 
+      onClick={() => setDelId(prev => prev === data._id ? null : data._id)} 
+      id="dowArr" 
+    />
 
-                          {(deleteModel && (delId===data._id)) && (
-                            <ul className="deleteModel" onClick={() => deleteHandle(data._id)}>
-                              <li>Delete</li>
-                              <span><RiDeleteBinLine style={{ marginTop: '3px', cursor:'pointer'}} /></span>
-                            </ul>
-                          )}
-                        </div>
-                      )}
+    {delId === data._id && (
+      <ul className="deleteModel" ref={delRef} onClick={() => deleteHandle(data._id)}>
+        <li>Delete</li>
+        <span>
+          <RiDeleteBinLine style={{ marginTop: '3px', cursor: 'pointer' }} />
+        </span>
+      </ul>
+    )}
+  </div>
+)}
+
                     </div>
 
 
                     <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '5px' }}>
-                      <div id='Time'>10:30 AM</div>
+                      <div id='Time'>{new Date(data?.time).toLocaleTimeString([], { 
+   hour: '2-digit', 
+   minute: '2-digit' 
+})}</div>
                       <img src={doubleTick} id='doubleTick' alt="" />
                       {/* {localStorage.getItem('LoginId')==data.fromId&&<FaAngleDown onClick={()=>deleteHandle(data._id)}/>} */}
 
@@ -242,15 +258,16 @@ function ChatSpace() {
 
           <div id='InputWrapTop'>
             <div id='inputBoxWrap'>
-              <div id='inputBox' style={{ position: 'relative' }}>
+              <div id='inputBox' style={{ position: 'relative'}}>
                 <input
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="Type message"
+                  style={{width:window.innerWidth>992?'72%':'99%'}}
                   className='py-2 rounded-5 inputBox'
                   onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                 />
-                {message && <img src={send} onClick={handleSend} style={{ position: 'absolute', left: '68.5%', bottom: '4px' }} alt="" id='sendButton' />}
+                {message && <img src={send} onClick={handleSend} style={{ position: 'absolute',right:window.innerWidth<992?'2%':"28.5%", bottom: '4px' }} alt="" id='sendButton' />}
               </div>
             </div>
           </div>

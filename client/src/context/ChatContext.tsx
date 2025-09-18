@@ -71,7 +71,8 @@ interface Message {
   fromId?: any;
   toId?:string;
   chat?:string;
-  _id?:string
+  _id?:string,
+  time:string
 }
 
 interface ChatContextType {
@@ -82,6 +83,8 @@ interface ChatContextType {
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
   sendMessage: (text: string) => void;
   deleteMessage: (id: string) => void;
+  setFlag:React.Dispatch<React.SetStateAction<boolean>>;
+  flag:boolean
 }
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
@@ -91,6 +94,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [loginUser, setLoginUser] = useState('');
+  const[flag,setFlag]=useState(true)
 
   useEffect(() => {
     const newSocket = io("http://localhost:4000/socket_one-one", {
@@ -104,7 +108,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.log(data,"rece");
       if (data.fromId == selectedUser?._id) {
         console.log('loghhh',data);
-        setMessages((prev) => [...prev, { fromId:data.fromId,todId:data.toId,msg:data.chat,_id:data._id}]);
+        setMessages((prev) => [...prev, { fromId:data.fromId,todId:data.toId,msg:data.chat,_id:data._id,time:data.time}]);
       }
     });
 
@@ -133,7 +137,8 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
           msg: m?.chat || '',
           fromId: m.fromId,
           toId: m.toId,
-          _id:m._id
+          _id:m._id,
+          time:m.time
         }));
         setMessages(history);
       } catch (err) {
@@ -161,7 +166,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     setMessages((prev) => [
       ...prev,
-      { msg: text, fromId:localStorage.getItem('LoginId'), toId: selectedUser._id }
+      { msg: text, fromId:localStorage.getItem('LoginId'), toId: selectedUser._id,time:Date() }
     ]);
   }
 };
@@ -192,7 +197,7 @@ console.log(loginUser,'loginUser');
 
 
   return (
-    <ChatContext.Provider value={{ socket, selectedUser, setSelectedUser, messages, setMessages, sendMessage, deleteMessage}}>
+    <ChatContext.Provider value={{ socket, selectedUser, setSelectedUser, setFlag, flag, messages, setMessages, sendMessage, deleteMessage}}>
       {children}
     </ChatContext.Provider>
   );
