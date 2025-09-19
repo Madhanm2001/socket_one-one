@@ -61,62 +61,62 @@ socketOneToOne.on("connection", (socket) => {
 
     socket.broadcast.emit("system_message", `🟢 A new user has joined the chat.`);
 
-    socket.on("send_private_message", async (toId, chat, callback) => {
-    try {
-      if (!fromId) {
-        if (callback) callback({ error: "Sender not found" });
-        return;
-      }
-      console.log(callback,'callback');
-      
-
-      const recipientSocketId = userIdMatchList.get(toId);
-
-
-      let conversation:any = await Conversation.findOne({
-        $or: [
-          { userId1: fromId, userId2: toId },
-          { userId1: toId, userId2: fromId },
-        ],
-      });
-
-      if (!conversation) {
-        conversation = await Conversation.create({
-          userId1: fromId,
-          userId2: toId,
-          conversation: [{ fromId, toId, chat, time:Date()}],
-        });
-      } else {
-        conversation = await Conversation.findByIdAndUpdate(
-          conversation._id,
-          { $push: { conversation: { fromId, toId, chat, time:Date()} } },
-          { new: true }
-        );
-      }
-
-      if (callback) {
-        callback({
-          message: "Message saved successfully",
-          data: conversation,
-        });
-      }
-
-            if (recipientSocketId) {
-        socketOneToOne.to(recipientSocketId).emit("receive_message", {
-          fromId,
-          toId,
-          chat,
-          time:Date(),
-          _id:conversation[conversation.length-1]._id
-        });
-        console.log(`📩 Message from ${fromId} -> ${toId}`);
-      } else {
-        console.log(`⚠️ User ${toId} not online`);
-      }
-    } catch (error: any) {
-      if (callback) callback({ error: error.message });
+  socket.on("send_private_message", async (toId, chat, callback) => {
+  try {
+    if (!fromId) {
+      if (callback) callback({ error: "Sender not found" });
+      return;
     }
-  });
+
+    // build base message (same keys as before)
+    let newMessage: any = { fromId, toId, chat, time: Date() };
+
+    let conversation :any= await Conversation.findOne({
+      $or: [
+        { userId1: fromId, userId2: toId },
+        { userId1: toId, userId2: fromId },
+      ],
+    });
+
+    if (!conversation) {
+      // first conversation
+      conversation = await Conversation.create({
+        userId1: fromId,
+        userId2: toId,
+        conversation: [newMessage],
+      });
+      // attach the auto-generated _id
+      newMessage._id = conversation.conversation[0]._id;
+    } else {
+      // push new message
+      conversation = await Conversation.findByIdAndUpdate(
+        conversation._id,
+        { $push: { conversation: newMessage } },
+        { new: true }
+      );
+      // attach last inserted _id
+      newMessage._id =
+        conversation.conversation[conversation.conversation.length - 1]._id;
+    }
+
+    // ✅ emit full object (same keys + _id)
+    const recipientSocketId = userIdMatchList.get(toId);
+    if (recipientSocketId) {
+      socketOneToOne.to(recipientSocketId).emit("receive_message", newMessage);
+      console.log("📩 Sent with _id:", newMessage);
+    }
+
+    if (callback) {
+      callback({
+        message: "Message saved successfully",
+        data: newMessage, // send new message only
+      });
+    }
+  } catch (error: any) {
+    if (callback) callback({ error: error.message });
+  }
+});
+
 
   socket.on("delete_private_message", async (chatId, toId, callback) => {
     const receiverSocketId = userIdMatchList.get(toId);
