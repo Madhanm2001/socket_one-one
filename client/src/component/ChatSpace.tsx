@@ -133,7 +133,6 @@ import { FaAngleLeft } from "react-icons/fa6";
 function ChatSpace() {
   const { selectedUser, messages, setSelectedUser, sendMessage, deleteMessage, setFlag, setMessage, message } = useChat();
   const [delId, setDelId] = useState<string | null>('');
-  const [deleteModel, setDeleteModel] = useState(false);
   const chatRef = useRef<HTMLDivElement | null>(null);
   const delRef = useRef<HTMLUListElement | null>(null);
 
@@ -143,7 +142,7 @@ function ChatSpace() {
     }
     const handleClickOutside = (event: MouseEvent) => {
       if (delRef.current && !delRef.current.contains(event.target as Node)) {
-        setDeleteModel(false);
+        setDelId(null);
       }
     };
 
