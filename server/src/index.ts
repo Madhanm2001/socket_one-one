@@ -71,7 +71,7 @@ socketOneToOne.on("connection", (socket) => {
       const recipientSocketId = userIdMatchList.get(toId);
       
 
-      let conversation = await Conversation.findOne({
+      let conversation:any = await Conversation.findOne({
         $or: [
           { userId1: fromId, userId2: toId },
           { userId1: toId, userId2: fromId },
@@ -91,6 +91,7 @@ socketOneToOne.on("connection", (socket) => {
           { new: true }
         );
       }
+   const lastMessage = conversation.conversation.at(-1);
 
       if (recipientSocketId) {
         socketOneToOne.to(recipientSocketId).emit("receive_message", {
@@ -98,7 +99,7 @@ socketOneToOne.on("connection", (socket) => {
           toId,
           chat,
           time:Date(),
-          _id:conversation
+          _id:lastMessage?._id
         });
 
 
