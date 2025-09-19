@@ -69,17 +69,7 @@ socketOneToOne.on("connection", (socket) => {
       }
 
       const recipientSocketId = userIdMatchList.get(toId);
-      if (recipientSocketId) {
-        socketOneToOne.to(recipientSocketId).emit("receive_message", {
-          fromId,
-          toId,
-          chat,
-          time:Date()
-        });
-        console.log(`📩 Message from ${fromId} -> ${toId}`);
-      } else {
-        console.log(`⚠️ User ${toId} not online`);
-      }
+      
 
       let conversation = await Conversation.findOne({
         $or: [
@@ -100,6 +90,21 @@ socketOneToOne.on("connection", (socket) => {
           { $push: { conversation: { fromId, toId, chat, time:Date()} } },
           { new: true }
         );
+      }
+
+      if (recipientSocketId) {
+        socketOneToOne.to(recipientSocketId).emit("receive_message", {
+          fromId,
+          toId,
+          chat,
+          time:Date(),
+          _id:conversation
+        });
+
+
+        console.log(`📩 Message from ${fromId} -> ${toId}`);
+      } else {
+        console.log(`⚠️ User ${toId} not online`);
       }
 
       if (callback) {
@@ -123,7 +128,7 @@ socketOneToOne.on("connection", (socket) => {
         `🗑️ Delete request from ${fromId} -> ${toId}, chatId: ${chatId}`
       );
     } else {
-      console.log(`⚠️ User ${toId} not online`);
+      console.log(`⚠️ User ${toId},${chatId} not online`);
     }
 
     try {

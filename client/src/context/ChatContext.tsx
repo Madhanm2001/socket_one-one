@@ -119,7 +119,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
 
     newSocket.on("message_deleted", (data: Message) => {
-      console.log(data,"rece");
+      console.log(data._id,"rece");
       if (data.fromId == selectedUser?._id) {
         console.log('loghhh',data);
         setMessages((prev) => prev.filter((msg) => msg._id !== data._id));
