@@ -90,7 +90,9 @@ interface ChatContextType {
 }
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
-
+const baseURL = import.meta.env.VITE_API_URL as string;
+const updatedURL = baseURL.slice(0,baseURL.length-4)
+console.log("udoa", updatedURL+'/socket_one-one')
 export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [selectedUser, setSelectedUser] = useState<any>(null);
@@ -99,8 +101,9 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [message,setMessage] = useState('')
   const[flag,setFlag]=useState(true)
 
+
   useEffect(() => {
-    const newSocket = io("http://localhost:4000/socket_one-one", {
+    const newSocket = io(updatedURL+'/socket_one-one', {
       auth: { token: localStorage.getItem("token") },
     });
     setSocket(newSocket);

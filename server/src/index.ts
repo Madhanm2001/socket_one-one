@@ -24,7 +24,6 @@ mongoose.connect(process.env.MONGO_DB_URL || "");
 
 const socketIO = new Server(server, {
   cors: {
-    origin: "http://localhost:5173",
     methods: ["GET", "POST", "DELETE"],
   },
 });
