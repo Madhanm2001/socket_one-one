@@ -67,21 +67,13 @@ socketOneToOne.on("connection", (socket) => {
         if (callback) callback({ error: "Sender not found" });
         return;
       }
+      console.log(callback,'callback');
+      
 
       const recipientSocketId = userIdMatchList.get(toId);
-      if (recipientSocketId) {
-        socketOneToOne.to(recipientSocketId).emit("receive_message", {
-          fromId,
-          toId,
-          chat,
-          time:Date()
-        });
-        console.log(`📩 Message from ${fromId} -> ${toId}`);
-      } else {
-        console.log(`⚠️ User ${toId} not online`);
-      }
 
-      let conversation = await Conversation.findOne({
+
+      let conversation:any = await Conversation.findOne({
         $or: [
           { userId1: fromId, userId2: toId },
           { userId1: toId, userId2: fromId },
@@ -107,6 +99,19 @@ socketOneToOne.on("connection", (socket) => {
           message: "Message saved successfully",
           data: conversation,
         });
+      }
+
+            if (recipientSocketId) {
+        socketOneToOne.to(recipientSocketId).emit("receive_message", {
+          fromId,
+          toId,
+          chat,
+          time:Date(),
+          _id:conversation[conversation.length-1]._id
+        });
+        console.log(`📩 Message from ${fromId} -> ${toId}`);
+      } else {
+        console.log(`⚠️ User ${toId} not online`);
       }
     } catch (error: any) {
       if (callback) callback({ error: error.message });
