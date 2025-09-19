@@ -129,16 +129,13 @@ import { useChat } from '../context/ChatContext';
 import { FaAngleDown } from "react-icons/fa";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { FaAngleLeft } from "react-icons/fa6";
-import { useNavigate } from 'react-router-dom';
 
 function ChatSpace() {
-  const { selectedUser, messages,setSelectedUser, sendMessage, deleteMessage,setFlag } = useChat();
-  const [message, setMessage] = useState('');
+  const { selectedUser, messages,setSelectedUser, sendMessage, deleteMessage,setFlag, setMessage,message } = useChat();
   const [delId, setDelId] = useState('');
   const [deleteModel, setDeleteModel] = useState(false);
   const chatRef = useRef<HTMLDivElement | null>(null);
   const delRef = useRef<HTMLUListElement | null>(null);
-  const navigate=useNavigate()
 
   useEffect(() => {
     if (chatRef.current) {
@@ -161,7 +158,7 @@ function ChatSpace() {
 
   if (!selectedUser) {
     return (
-      <div style={{ width: window.innerWidth>768?'80%':'100%', borderLeft: '1px grey solid', zIndex: 10, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <div style={{ width: window.innerWidth>768?'80%':'100%', backgroundColor:'#161616',borderLeft: '1px grey solid', zIndex: 10, display: 'flex', justifyContent: 'center', alignItems: 'center' ,height:'auto'}}>
         <p>Select a user to start chatting</p>
       </div>
     );
@@ -223,11 +220,11 @@ function ChatSpace() {
                       {localStorage.getItem('LoginId') === data.fromId && (
   <div style={{ position: 'relative' }}>
     <FaAngleDown 
-      onClick={() => setDelId(prev => prev === data._id ? null : data._id)} 
+      onClick={() => {setDelId(prev => prev === data._id ? null : data._id),setDeleteModel(prev=>!prev)}} 
       id="dowArr" 
     />
 
-    {delId === data._id && (
+    {((delId === data._id) && deleteModel) && (
       <ul className="deleteModel" ref={delRef} onClick={() => deleteHandle(data._id)}>
         <li>Delete</li>
         <span>

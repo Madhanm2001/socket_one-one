@@ -84,7 +84,9 @@ interface ChatContextType {
   sendMessage: (text: string) => void;
   deleteMessage: (id: string) => void;
   setFlag:React.Dispatch<React.SetStateAction<boolean>>;
-  flag:boolean
+  flag:boolean;
+  setMessage:React.Dispatch<React.SetStateAction<string>>;
+  message: any ;
 }
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
@@ -94,6 +96,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [loginUser, setLoginUser] = useState('');
+  const [message,setMessage] = useState('')
   const[flag,setFlag]=useState(true)
 
   useEffect(() => {
@@ -197,7 +200,7 @@ console.log(loginUser,'loginUser');
 
 
   return (
-    <ChatContext.Provider value={{ socket, selectedUser, setSelectedUser, setFlag, flag, messages, setMessages, sendMessage, deleteMessage}}>
+    <ChatContext.Provider value={{ socket, setMessage,message, selectedUser, setSelectedUser, setFlag, flag, messages, setMessages, sendMessage, deleteMessage}}>
       {children}
     </ChatContext.Provider>
   );

@@ -56,7 +56,7 @@
 // export default UserList
 
 
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import profile from '../assets/images/IMG_7885.JPG';
 import axiosInstance from '../settings/axiosInstance';
 import { URL } from '../settings/apiUrl';
@@ -67,7 +67,7 @@ import { useNavigate } from 'react-router-dom';
 const UserList = () => {
   const [userList, setUserList] = useState<any[]>([]);
   const [logOutModel, setLogOutModel] = useState<boolean>();
-  const { setSelectedUser, selectedUser,flag } = useChat();
+  const { setSelectedUser, selectedUser,flag,setMessage } = useChat();
   const logoutRef = useRef<HTMLDivElement>(null);
   const navigate=useNavigate()
 
@@ -91,6 +91,10 @@ const UserList = () => {
 
   console.log(userList,"userList");
   
+const onClickSelectedUser = (user: any) => {
+  setSelectedUser(user);
+  setMessage('')
+};
 
   return (
     <div style={{ width: window.innerWidth<=768?'100%':'30%', minWidth: '350px' }}>
@@ -120,7 +124,7 @@ const UserList = () => {
             <div
               id='user'
               key={id}
-              onClick={() => setSelectedUser(user.user)}
+              onClick={() => {onClickSelectedUser(user.user)}}
               style={{ background: selectedUser?._id === user.user._id ? '#333' : 'transparent', cursor: 'pointer',borderRadius:'10px' }}
             >
               <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
