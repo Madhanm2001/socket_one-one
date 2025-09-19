@@ -191,10 +191,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
       }
     );
-
-    setMessages((prev) => prev.filter((msg) => msg._id !== id));
-
-    
+    setMessages((prev) => prev.filter((msg) => msg._id !== id)); 
   }
 };
 console.log(loginUser,'loginUser');
