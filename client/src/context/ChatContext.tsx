@@ -165,10 +165,10 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (response?.error) {
           console.error("Message error:", response.error);
         } else {
-          console.log("Message saved:", response?.data?.conversation[response?.data?.conversation.length-1]);
+          console.log("Message saved:", response?.data?.conversation[response?.data?.conversation.length-1]._id);
           setMessages((prev) => [
       ...prev,
-      { msg: text, fromId:localStorage.getItem('LoginId'), toId: selectedUser._id,time:Date(),_id:response?.data?.conversation[response?.data?.conversation.length-1] }
+      { msg: text, fromId:localStorage.getItem('LoginId'), toId: selectedUser._id,time:Date(),_id:response?.data?.conversation[response?.data?.conversation.length-1]._id }
     ]);
         }
       }
