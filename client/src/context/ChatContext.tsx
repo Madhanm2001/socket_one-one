@@ -61,7 +61,7 @@
 // };
 
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useLayoutEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import axiosInstance from "../settings/axiosInstance";
 import { URL } from "../settings/apiUrl";
@@ -102,7 +102,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const[flag,setFlag]=useState(true)
 
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const newSocket = io(updatedURL+'/socket_one-one', {
       auth: { token: localStorage.getItem("token") },
     });
