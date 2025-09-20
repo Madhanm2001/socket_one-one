@@ -61,7 +61,7 @@
 // };
 
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import axiosInstance from "../settings/axiosInstance";
 import { URL } from "../settings/apiUrl";
@@ -102,58 +102,70 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const[flag,setFlag]=useState(true)
 
 
-  useEffect(() => {
-    const newSocket = io(updatedURL+'/socket_one-one', {
-      auth: { token: localStorage.getItem("token") },
-    });
-    setSocket(newSocket);
-    const loginUser:any=localStorage.getItem('LoginId') ||''
-    setLoginUser(loginUser)
+useEffect(() => {
+  const newSocket = io(updatedURL + '/socket_one-one', {
+    auth: { token: localStorage.getItem("token") },
+  });
+  setSocket(newSocket);
 
-    newSocket.on("receive_message", (data: Message) => {
-      console.log(data,"rece");
-      if (data.fromId == selectedUser?._id) {
-        console.log('loghhh',data);
-        setMessages((prev) => [...prev, { fromId:data.fromId,todId:data.toId,msg:data.chat,_id:data._id,time:data.time}]);
+  const loginUser: any = localStorage.getItem('LoginId') || '';
+  setLoginUser(loginUser);
+
+  // Listen for incoming messages globally
+  newSocket.on("receive_message", (data: Message) => {
+    setMessages(prev => {
+      // only append if the message belongs to current selectedUser
+      if (data.fromId === selectedUser?._id || data.toId === selectedUser?._id) {
+        return [...prev, { fromId:data.fromId, toId:data.toId, msg:data.chat, _id:data._id, time:data.time }];
       }
+      return prev;
     });
+  });
 
-    newSocket.on("message_deleted", (data: Message) => {
-      console.log(data._id,"rece");
-      if (data.fromId == selectedUser?._id) {
-        console.log('loghhh',data);
-        setMessages((prev) => prev.filter((msg) => msg._id !== data._id));
-      }
-    });
+  newSocket.on("message_deleted", (data: Message) => {
+    setMessages(prev => prev.filter(msg => msg._id !== data._id));
+  });
 
-    return () => {
-      newSocket.emit("disconnect_user");
-      newSocket.disconnect();
-    };
-  }, [selectedUser]);
+  return () => {
+    newSocket.emit("disconnect_user");
+    newSocket.disconnect();
+  };
+}, []); // ← only run once, socket persists
 
-  // 🔹 Load conversation history when selected user changes
-  useEffect(() => {
-    const fetchConversations = async () => {
-      if (!selectedUser) return;
-      try {
-        const res = await axiosInstance.get(`${URL.conversation.getConversation}/${selectedUser._id}`);
-        console.log("resva", res.data)
-        const history = res.data.data.conversation.map((m: any) => ({
-          msg: m?.chat || '',
-          fromId: m.fromId,
-          toId: m.toId,
-          _id:m._id,
-          time:m.time
-        }));
-        setMessages(history);
-      } catch (err) {
-        console.error("Failed to fetch conversation", err);
-      }
-    };
+const conversationCache = useRef<Map<string, Message[]>>(new Map());
 
-    fetchConversations();
-  }, [selectedUser]);
+useEffect(() => {
+  if (!selectedUser) return;
+
+  // Check if we already have cached messages
+  const cached = conversationCache.current.get(selectedUser._id);
+  if (cached) {
+    setMessages(cached);
+    return;
+  }
+
+  // Otherwise, fetch from API
+  const fetchConversations = async () => {
+    try {
+      const res = await axiosInstance.get(`${URL.conversation.getConversation}/${selectedUser._id}`);
+      const history: Message[] = res.data.data.conversation.map((m: any) => ({
+        msg: m?.chat || '',
+        fromId: m.fromId,
+        toId: m.toId,
+        _id: m._id,
+        time: m.time
+      }));
+      // cache the messages
+      conversationCache.current.set(selectedUser._id, history);
+      setMessages(history);
+    } catch (err) {
+      console.error("Failed to fetch conversation", err);
+    }
+  };
+
+  fetchConversations();
+}, [selectedUser]);
+
 
   const sendMessage = (text: string) => {
   if (socket && selectedUser && text.trim()) {
