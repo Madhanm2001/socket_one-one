@@ -119,7 +119,7 @@
 // export default ChatSpace;
 
 
-import {useLayoutEffect, useRef, useState } from 'react';
+import {useEffect, useRef, useState } from 'react';
 import '../App.css';
 import doubleTick from '../assets/images/doubleTick.png';
 import profile from '../assets/images/profileIMG.jpg';
@@ -136,7 +136,7 @@ function ChatSpace() {
   const chatRef = useRef<HTMLDivElement | null>(null);
   const delRef = useRef<HTMLUListElement | null>(null);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (chatRef.current) {
       chatRef.current.scrollTop = chatRef.current.scrollHeight;
     }
