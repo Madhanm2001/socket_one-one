@@ -92,10 +92,13 @@ const UserList = () => {
   console.log(userList,"userList");
   
 const onClickSelectedUser = (user: any) => {
+  if (selectedUser !== user) {
+    setMessages([]);
+    setMessage('');
+  }
   setSelectedUser(user);
-  setMessage('')
-  setMessages([])
 };
+
 
   return (
     <div style={{ width: window.innerWidth<=768?'100%':'30%', minWidth: '350px' }}>
