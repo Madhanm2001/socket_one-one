@@ -130,7 +130,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
       newSocket.emit("disconnect_user");
       newSocket.disconnect();
     };
-  }, []);
+  }, [selectedUser]);
 
   // 🔹 Load conversation history when selected user changes
   useEffect(() => {
