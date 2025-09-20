@@ -122,7 +122,7 @@
 import {useLayoutEffect, useRef, useState } from 'react';
 import '../App.css';
 import doubleTick from '../assets/images/doubleTick.png';
-import profile from '../assets/images/IMG_7885.JPG';
+import profile from '../assets/images/profileIMG.jpg';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import send from '../assets/images/send.png';
 import { useChat } from '../context/ChatContext';
@@ -157,7 +157,7 @@ function ChatSpace() {
 
   if (!selectedUser) {
     return (
-      <div style={{ width: window.innerWidth > 768 ? '80%' : '100%', backgroundColor: '#161616', borderLeft: '1px grey solid', zIndex: 10, display: 'flex', justifyContent: 'center', alignItems: 'center', height: 'auto' }}>
+      <div style={{ width: window.innerWidth > 768 ? '80%' : '100%', backgroundColor: '#161616', borderLeft: innerWidth>768?'1px grey solid':'none', zIndex: 10, display: 'flex', justifyContent: 'center', alignItems: 'center', height: 'auto' }}>
         <p>Select a user to start chatting</p>
       </div>
     );
@@ -179,10 +179,10 @@ function ChatSpace() {
     setDelId(null);
   };
   return (
-    <div style={{ width: window.innerWidth > 768 ? '80%' : '100%', borderLeft: '1px grey solid', zIndex: 10 }}>
+    <div style={{ width: window.innerWidth > 768 ? '80%' : '100%', borderLeft:innerWidth>768?'1px grey solid':'none', zIndex: 10 }}>
       <div id='navBar' style={{ width: '100%' }}>
         <div className="d-flex gap-3 py-2 px-3 sticky-top" style={{ backgroundColor: '#161616' }}>
-          <div style={{ display: 'flex', gap: '10px' }}>
+          <div style={{ display: 'flex', gap: '20px' }}>
             {window.innerWidth <= 768 && <FaAngleLeft style={{ height: '25px', color: 'white', marginTop: '12px' }} onClick={() => { setSelectedUser('') }} />}
             <img src={profile} style={{ height: '50px', width: '50px', borderRadius: '100%' }} alt="" />
           </div>

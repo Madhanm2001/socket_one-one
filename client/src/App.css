@@ -29,9 +29,11 @@ body{
   overflow-y: auto;
   -ms-overflow-style: none;
   scrollbar-width: none;   
-  padding: 3%;
+  padding: 0 2.5% 12.5% 2.5%;
   z-index: 1;
   position: relative;
+  height: auto;
+
 }
 
 #InputWrapTop {
@@ -94,7 +96,7 @@ body{
 
 .deleteModel {
   position: absolute;
-  top: 35px;
+  top: 20px;
   right: 0;
   width: 120px;
   padding: 8px 10px;
@@ -112,7 +114,7 @@ body{
 #listNavBar{
   display: flex;
   justify-content: space-between;
-  color: antiquewhite;
+  color: white;
   padding: 11.5px 20px;
   border-bottom: 1px solid grey;
   position: sticky;
@@ -139,6 +141,7 @@ body{
   justify-content: space-between;
   padding:5px 10px;
   cursor: pointer;
+  height: 75px;
 }
 #user h5 {
   margin: 0;
@@ -182,7 +185,7 @@ body{
   overflow-y: auto;
   -ms-overflow-style: none;
   scrollbar-width: none;   
-  padding: 3%;
+  padding: 2.5%;
   z-index: 100;
 }
 #user:hover{

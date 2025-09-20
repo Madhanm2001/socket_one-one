@@ -57,7 +57,7 @@
 
 
 import { useEffect, useRef, useState } from 'react';
-import profile from '../assets/images/IMG_7885.JPG';
+import profile from '../assets/images/profileIMG.jpg';
 import axiosInstance from '../settings/axiosInstance';
 import { URL } from '../settings/apiUrl';
 import { useChat } from '../context/ChatContext';
@@ -113,7 +113,7 @@ const onClickSelectedUser = (user: any) => {
   <ul className="deleteModel" onClick={() => {localStorage.removeItem('token'),navigate('/Auth')}}>
     <span>
       <IoIosLogOut
-        style={{ marginTop: "3px",height:'20px', cursor: "pointer" }}
+        style={{ marginTop: "3px",height:'20px', cursor: "pointer" ,color:'white'}}
       />
     </span>
     <li style={{fontWeight:700}}>Logout</li>
@@ -135,7 +135,7 @@ const onClickSelectedUser = (user: any) => {
                 
   <img 
     src={profile} 
-    style={{ height: '50px', width: '50px', borderRadius: '100%' }} 
+    style={{ height: '52.5px', width: '52.5px', borderRadius: '100%' }} 
     alt="profile img" 
   />
   <div style={{ marginTop: '12px' }}>
