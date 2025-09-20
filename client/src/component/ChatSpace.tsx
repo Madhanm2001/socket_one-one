@@ -119,7 +119,7 @@
 // export default ChatSpace;
 
 
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import {useLayoutEffect, useRef, useState } from 'react';
 import '../App.css';
 import doubleTick from '../assets/images/doubleTick.png';
 import profile from '../assets/images/IMG_7885.JPG';
