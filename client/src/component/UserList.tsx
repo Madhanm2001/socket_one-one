@@ -67,7 +67,7 @@ import { useNavigate } from 'react-router-dom';
 const UserList = () => {
   const [userList, setUserList] = useState<any[]>([]);
   const [logOutModel, setLogOutModel] = useState<boolean>();
-  const { setSelectedUser, selectedUser,flag,setMessage } = useChat();
+  const { setSelectedUser, selectedUser,flag,setMessage,setMessages } = useChat();
   const logoutRef = useRef<HTMLDivElement>(null);
   const navigate=useNavigate()
 
@@ -94,6 +94,7 @@ const UserList = () => {
 const onClickSelectedUser = (user: any) => {
   setSelectedUser(user);
   setMessage('')
+  setMessages([])
 };
 
   return (
