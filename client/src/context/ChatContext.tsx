@@ -53,7 +53,9 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
         console.log('loghhh', data);
         setMessages((prev) => [...prev, { fromId: data.fromId, todId: data.toId, msg: data.chat, _id: data._id, time: data.time }]);
       }
-    });
+      setFlag(prev=>!prev)
+    }
+  );
 
     newSocket.on("message_deleted", (data: Message) => {
       console.log(data._id, "rece");
