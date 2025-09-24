@@ -8,26 +8,26 @@ const Auth = () => {
 
   const [isSignUp, setIsSignUp] = useState(false);
   const [signInDetails, setSignInDetails] = useState({
-    phoneNumber:'',
+    phoneNumber: '',
     email: "",
     password: "",
   });
   const [signInError, setSignInError] = useState({
-    phoneNumber:'',
+    phoneNumber: '',
     email: "",
     password: "",
     invalid: "",
   });
   const [signUpDetails, setSignUpDetails] = useState({
     password: "",
-    confirmPassword:'',
+    confirmPassword: '',
     phoneNumber: "",
     email: "",
     name: "",
   });
   const [signUpError, setSignUpError] = useState({
     password: "",
-    confirmPassword:'',
+    confirmPassword: '',
     phoneNumber: "",
     email: "",
     name: "",
@@ -87,64 +87,64 @@ const Auth = () => {
     return errors;
   };
 
-const onClickSignIn = async () => {
-  const errors = validateSignIn(signInDetails);
-  if (Object.keys(errors).length > 0) {
-    setSignInError({ ...errors, invalid: "" });
-    return;
-  }
-
-  try {
-    const res = await axiosInstance.post(URL.user.signIn, {
-      email: signInDetails.email.includes("@")
-        ? signInDetails.email
-        : undefined,
-      phoneNumber: !signInDetails.email.includes("@")
-        ? signInDetails.email
-        : undefined,
-      password: signInDetails.password,
-    });
-
-    localStorage.setItem("token", res.data.token);
-    navigate("/");
-    console.log("log",res);
-  } catch (err: any) {
-    setSignInError({
-      email: "",
-      phoneNumber:"",
-      password: "",
-      invalid: err.response?.data?.message || "Invalid credentials",
-    });
-    console.log("log",err);
-    
-  }
-};
-
-const onClickSignUp = async () => {
-  const errors = validateSignUp(signUpDetails);
-  if (Object.keys(errors).length > 0) {
-    setSignUpError({ ...errors, invalid: "" });
-    return;
-  }
-
-  try {
-    const res = await axiosInstance.post(URL.user.signUp, signUpDetails);
-    console.log("log",res);
-    if(res){
-      window.location.reload()
+  const onClickSignIn = async () => {
+    const errors = validateSignIn(signInDetails);
+    if (Object.keys(errors).length > 0) {
+      setSignInError({ ...errors, invalid: "" });
+      return;
     }
-  } catch (err: any) {
-    console.log("log",err);
-    setSignUpError({
-      name: "",
-      email: "",
-      phoneNumber: "",
-      password: "",
-      confirmPassword: "",
-      invalid: err.response?.data?.message || "Signup failed",
-    });
-  }
-};
+
+    try {
+      const res = await axiosInstance.post(URL.user.signIn, {
+        email: signInDetails.email.includes("@")
+          ? signInDetails.email
+          : undefined,
+        phoneNumber: !signInDetails.email.includes("@")
+          ? signInDetails.email
+          : undefined,
+        password: signInDetails.password,
+      });
+
+      localStorage.setItem("token", res.data.token);
+      navigate("/");
+      console.log("log", res);
+    } catch (err: any) {
+      setSignInError({
+        email: "",
+        phoneNumber: "",
+        password: "",
+        invalid: err.response?.data?.message || "Invalid credentials",
+      });
+      console.log("log", err);
+
+    }
+  };
+
+  const onClickSignUp = async () => {
+    const errors = validateSignUp(signUpDetails);
+    if (Object.keys(errors).length > 0) {
+      setSignUpError({ ...errors, invalid: "" });
+      return;
+    }
+
+    try {
+      const res = await axiosInstance.post(URL.user.signUp, signUpDetails);
+      console.log("log", res);
+      if (res) {
+        window.location.reload()
+      }
+    } catch (err: any) {
+      console.log("log", err);
+      setSignUpError({
+        name: "",
+        email: "",
+        phoneNumber: "",
+        password: "",
+        confirmPassword: "",
+        invalid: err.response?.data?.message || "Signup failed",
+      });
+    }
+  };
 
 
   const handleChangeSignUp = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -170,9 +170,9 @@ const onClickSignUp = async () => {
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    background:'black',
-    height:'auto',
-    minHeight:'100vh'
+    background: 'black',
+    height: 'auto',
+    minHeight: '100vh'
   };
 
   const cardStyle: React.CSSProperties = {
@@ -272,8 +272,8 @@ const onClickSignUp = async () => {
             style={linkStyle}
             onClick={() => {
               setIsSignUp(true);
-              setSignInError({ email: "", password: "", invalid: "" ,phoneNumber:""});
-              setSignInDetails({ email: "", password: "", phoneNumber:"" });
+              setSignInError({ email: "", password: "", invalid: "", phoneNumber: "" });
+              setSignInDetails({ email: "", password: "", phoneNumber: "" });
             }}
           >
             create account
@@ -283,7 +283,7 @@ const onClickSignUp = async () => {
         <section style={cardStyle}>
           <h2 style={titleStyle}>Sign-up</h2>
 
-          {["name", "email", "phoneNumber", "password","confirmPassword"].map(
+          {["name", "email", "phoneNumber", "password", "confirmPassword"].map(
             (field) => (
               <div
                 key={field}
@@ -315,7 +315,7 @@ const onClickSignUp = async () => {
               setIsSignUp(false);
               setSignUpError({
                 password: "",
-                confirmPassword:'',
+                confirmPassword: '',
                 phoneNumber: "",
                 email: "",
                 name: "",
@@ -324,7 +324,7 @@ const onClickSignUp = async () => {
               setSignUpDetails({
                 password: "",
                 phoneNumber: "",
-                confirmPassword:'',
+                confirmPassword: '',
                 email: "",
                 name: "",
               });
